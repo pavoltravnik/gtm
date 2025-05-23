@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cookie Consent Example</title>
+    
+    <script>
+        // Define dataLayer and the gtag function.
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        
+        // Set default consent to 'denied' as a placeholder
+        gtag('consent', 'default', {
+            'ad_storage': 'denied',
+            'ad_user_data': 'denied',
+            'ad_personalization': 'denied',
+            'analytics_storage': 'denied'
+        });
+    </script>
+    
+    <!-- Google Tag Manager -->
+    <script>
+        (function(w,d,s,l,i){
+            w[l]=w[l]||[];
+            w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});
+            var f=d.getElementsByTagName(s)[0],
+                j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';
+            j.async=true;
+            j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;
+            f.parentNode.insertBefore(j,f);
+        })(window,document,'script','dataLayer','GTM-XXXXXX');
+    </script>
+    <!-- End Google Tag Manager -->
+    
+    <!-- Create consent update functions -->
+    <script>
+        function updateConsent(preferences) {
+            gtag('consent', 'update', preferences);
+            document.getElementById('cookie-banner').style.display = 'none';
+            document.getElementById('consent-confirmation').style.display = 'block';
+            
+            // Store consent in localStorage
+            localStorage.setItem('cookieConsent', JSON.stringify(preferences));
+            localStorage.setItem('consentTimestamp', new Date().toISOString());
+        }
+        
+        function acceptAllCookies() {
+            updateConsent({
+                'ad_storage': 'granted',
+                'ad_user_data': 'granted',
+                'ad_personalization': 'granted',
+                'analytics_storage': 'granted'
+            });
+        }
+        
+        function acceptEssentialCookies() {
+            updateConsent({
+                'ad_storage': 'denied',
+                'ad_user_data': 'denied',
+                'ad_personalization': 'denied',
+                'analytics_storage': 'denied'
+            });
+        }
+        
+        function acceptCustomCookies() {
+            const adStorage = document.getElementById('ad-storage').checked ? 'granted' : 'denied';
+            const adUserData = document.getElementById('ad-user-data').checked ? 'granted' : 'denied';
+            const adPersonalization = document.getElementById('ad-personalization').checked ? 'granted' : 'denied';
+            const analyticsStorage = document.getElementById('analytics-storage').checked ? 'granted' : 'denied';
+            
+            updateConsent({
+                'ad_storage': adStorage,
+                'ad_user_data': adUserData,
+                'ad_personalization': adPersonalization,
+                'analytics_storage': analyticsStorage
+            });
+        }
+        
+        // Check for existing consent when page loads
+        window.addEventListener('DOMContentLoaded', function() {
+            const savedConsent = localStorage.getItem('cookieConsent');
+            if (savedConsent) {
+                document.getElementById('cookie-banner').style.display = 'none';
+            }
+        });
+    </script>
+    
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #f1f1f1;
+            padding: 20px;
+            box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+        }
+        
+        .cookie-content {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .cookie-options {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .cookie-options.show {
+            display: block;
+        }
+        
+        .btn {
+            padding: 8px 16px;
+            margin-right: 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        .btn-primary {
+            background-color: #4CAF50;
+            color: white;
+        }
+        
+        .btn-secondary {
+            background-color: #f1f1f1;
+            border: 1px solid #ccc;
+        }
+        
+        .checkbox-group {
+            margin: 10px 0;
+        }
+        
+        .confirmation {
+            display: none;
+            padding: 10px;
+            background-color: #dff0d8;
+            border-radius: 4px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript>
+        <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXX"
+                height="0" width="0" style="display:none;visibility:hidden"></iframe>
+    </noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
+    <div class="container">
+        <h1>Welcome to Our Website</h1>
+        
+        <p>This is a simple example page demonstrating Google Tag Manager with cookie consent implementation.</p>
+        
+        <div id="consent-confirmation" class="confirmation">
+            <p>Thank you! Your cookie preferences have been saved.</p>
+        </div>
+        
+        <div class="content">
+            <h2>Main Content</h2>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam auctor, nisl eget ultricies tincidunt, 
+               nisl nisl aliquam nisl, eget aliquam nisl nisl eget nisl. Nullam auctor, nisl eget ultricies tincidunt.</p>
+        </div>
+    </div>
+    
+    <div id="cookie-banner" class="cookie-banner">
+        <div class="cookie-content">
+            <h3>Cookie Consent</h3>
+            <p>We use cookies to improve your experience on our site. Please let us know which cookies we can store.</p>
+            
+            <button class="btn btn-primary" onclick="acceptAllCookies()">Accept All</button>
+            <button class="btn btn-secondary" onclick="acceptEssentialCookies()">Essential Only</button>
+            <button class="btn btn-secondary" id="customize-btn" onclick="document.getElementById('cookie-options').classList.toggle('show')">
+                Customize
+            </button>
+            
+            <div id="cookie-options" class="cookie-options">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="ad-storage">
+                    <label for="ad-storage">Ad Storage</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="ad-user-data">
+                    <label for="ad-user-data">Ad User Data</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="ad-personalization">
+                    <label for="ad-personalization">Ad Personalization</label>
+                </div>
+                
+                <div class="checkbox-group">
+                    <input type="checkbox" id="analytics-storage">
+                    <label for="analytics-storage">Analytics Storage</label>
+                </div>
+                
+                <button class="btn btn-primary" onclick="acceptCustomCookies()">Save Preferences</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
